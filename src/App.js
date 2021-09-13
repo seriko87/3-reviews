@@ -1,23 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import Review from "./Review";
+import reviews from "./data";
 
 function App() {
+  const [people, setPeople] = useState(reviews[0]);
+
+  const checkNumber = (number) => {
+    if (number > reviews.length - 1) {
+      return 0;
+    }
+    if (number < 0) {
+      return reviews.length - 1;
+    }
+    return number;
+  };
+
+  const handleClick = (id, next, prev) => {
+    if (next) {
+      id = checkNumber(id);
+      setPeople(reviews[id]);
+    } else if (prev) {
+      id = checkNumber(id);
+      setPeople(reviews[id]);
+    } else {
+      let random = Math.floor(Math.random() * reviews.length);
+      if (id === reviews[random].id) {
+        random = random + 1;
+        random = checkNumber(random);
+        setPeople(reviews[random]);
+      } else {
+        random = checkNumber(random);
+        setPeople(reviews[random]);
+      }
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='container'>
+      <h1>Our Reviews</h1>
+      <Review item={people} handleClick={handleClick} />
     </div>
   );
 }
